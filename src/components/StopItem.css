@@ -1,0 +1,90 @@
+.stop-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.stop-item:hover {
+  background-color: #f8fafc;
+}
+
+.stop-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.stop-info {
+  flex: 1;
+}
+
+.stop-info strong {
+  display: block;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.stop-duration {
+  font-size: 0.875rem;
+  color: #3b82f6;
+  margin-bottom: 0.5rem;
+}
+
+.stop-notes {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Type-specific styling */
+.stop-airport {
+  border-left: 3px solid #6b7280;
+}
+
+.stop-grocery {
+  border-left: 3px solid #f59e0b;
+}
+
+.stop-sightseeing,
+.stop-waterfall,
+.stop-glacier,
+.stop-lava,
+.stop-hiking {
+  border-left: 3px solid #3b82f6;
+}
+
+.stop-geothermal,
+.stop-hot_spring {
+  border-left: 3px solid #8b5cf6;
+}
+
+.stop-campsite {
+  border-left: 3px solid #10b981;
+}
+
+.stop-item.editable {
+  padding-right: 3rem;
+}
+
+.edit-stop-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.edit-stop-btn:hover {
+  background: #2563eb;
+}

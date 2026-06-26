@@ -1,0 +1,14 @@
+[
+  {
+    "id": "task-task-mqv2gkw6",
+    "key": "task-mqv2gkw6",
+    "content": "Task completed: task-mqv2gkw6",
+    "namespace": "tasks",
+    "type": "task-outcome",
+    "metadata": {
+      "success": true,
+      "quality": 0.85
+    },
+    "createdAt": 1782486939662
+  }
+]

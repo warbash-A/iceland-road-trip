@@ -1,0 +1,60 @@
+.map-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 1rem;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-toggle button,
+.edit-toggle {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle button:hover,
+.edit-toggle:hover {
+  background: #f9fafb;
+}
+
+.view-toggle button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.edit-toggle.active {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+@media (max-width: 768px) {
+  .map-controls {
+    top: 10px;
+    right: 10px;
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
+  .view-toggle button,
+  .edit-toggle {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}

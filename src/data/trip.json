@@ -1,0 +1,334 @@
+{
+  "trip": {
+    "title": "Iceland Road Trip 2026",
+    "start_date": "2026-07-17",
+    "days": [
+      {
+        "day": 1,
+        "date": "2026-07-17",
+        "label": "Arrival → Reykjavík",
+        "overnight": {
+          "name": "Reykjavík Area",
+          "type": "campsite",
+          "lat": 64.1349,
+          "lng": -21.8758,
+          "notes": "Stay near Reykjavík. Large campsite with facilities.",
+          "price_isk": 2500
+        },
+        "stops": [
+          {
+            "name": "Keflavík International Airport",
+            "type": "airport",
+            "lat": 63.9850,
+            "lng": -22.6056,
+            "duration_min": 60,
+            "drive_from_prev_min": null,
+            "notes": "Pick up rental car. Get SIM card. Fuel up before leaving."
+          },
+          {
+            "name": "Bonus Supermarket, Reykjavík",
+            "type": "grocery",
+            "lat": 64.1355,
+            "lng": -21.9000,
+            "duration_min": 45,
+            "drive_from_prev_min": 50,
+            "notes": "Iceland's cheapest grocery chain. Stock up on camping supplies, food for the week."
+          },
+          {
+            "name": "Reykjavík Old Harbour",
+            "type": "sightseeing",
+            "lat": 64.1516,
+            "lng": -21.9389,
+            "duration_min": 90,
+            "drive_from_prev_min": 10,
+            "notes": "Walk the harbour, grab a famous Icelandic hot dog. Easy intro to the city."
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "date": "2026-07-18",
+        "label": "Golden Circle / Hverageri",
+        "overnight": {
+          "name": "Hverageri Area Campsite",
+          "type": "campsite",
+          "lat": 64.0013,
+          "lng": -21.1826,
+          "notes": "Geothermal town campsite. Good base for hot spring hikes.",
+          "price_isk": 1800
+        },
+        "stops": [
+          {
+            "name": "Þingvellir National Park",
+            "type": "hiking",
+            "lat": 64.2559,
+            "lng": -21.1300,
+            "duration_min": 120,
+            "drive_from_prev_min": 50,
+            "notes": "Walk between two tectonic plates. UNESCO World Heritage Site. About 1-2 hours exploring."
+          },
+          {
+            "name": "Geysir Geothermal Area",
+            "type": "geothermal",
+            "lat": 64.3103,
+            "lng": -20.3022,
+            "duration_min": 60,
+            "drive_from_prev_min": 50,
+            "notes": "Strokkur erupts every 5-10 minutes. About 30 min from Þingvellir."
+          },
+          {
+            "name": "Gullfoss Waterfall",
+            "type": "waterfall",
+            "lat": 64.3276,
+            "lng": -20.1216,
+            "duration_min": 60,
+            "drive_from_prev_min": 10,
+            "notes": "Two-tiered massive waterfall. Very close to Geysir, just a few minutes drive."
+          },
+          {
+            "name": "Hverageri Hot Springs",
+            "type": "hot_spring",
+            "lat": 64.0013,
+            "lng": -21.1826,
+            "duration_min": 90,
+            "drive_from_prev_min": 60,
+            "notes": "Geothermal town. Optional: Reykjadalur hot river hike (3km each way)."
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "date": "2026-07-19",
+        "label": "Circular/Skaftafell",
+        "overnight": {
+          "name": "Skaftafell Campsite",
+          "type": "campsite",
+          "lat": 64.0169,
+          "lng": -16.9753,
+          "notes": "Large campsite in Vatnajökull National Park. Bring camp stove. Arrive by 2pm.",
+          "price_isk": 2000
+        },
+        "stops": [
+          {
+            "name": "Seljalandsfoss Waterfall",
+            "type": "waterfall",
+            "lat": 63.6156,
+            "lng": -19.9908,
+            "duration_min": 75,
+            "drive_from_prev_min": 90,
+            "notes": "Walk BEHIND the waterfall. Bring rain gear. About 1.5 hours from Hverageri."
+          },
+          {
+            "name": "Skógafoss Waterfall",
+            "type": "waterfall",
+            "lat": 63.5320,
+            "lng": -19.5118,
+            "duration_min": 60,
+            "drive_from_prev_min": 30,
+            "notes": "60m drop. Climb 370 stairs to the top. About 30 min from Seljalandsfoss."
+          },
+          {
+            "name": "Reynisfjara Black Sand Beach",
+            "type": "sightseeing",
+            "lat": 63.4034,
+            "lng": -19.0571,
+            "duration_min": 60,
+            "drive_from_prev_min": 35,
+            "notes": "Dramatic basalt columns, sea stacks. NEVER turn your back on the ocean - dangerous waves!"
+          },
+          {
+            "name": "Skaftafell — Svartifoss Hike",
+            "type": "hiking",
+            "lat": 64.0169,
+            "lng": -16.9753,
+            "duration_min": 120,
+            "drive_from_prev_min": 120,
+            "notes": "3.8km round trip to Svartifoss waterfall with hexagonal basalt columns. About 2 hours from Vík."
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "date": "2026-07-20",
+        "label": "Jökulsárlón area",
+        "overnight": {
+          "name": "Jökulsárlón Area / Höfn",
+          "type": "campsite",
+          "lat": 64.2527,
+          "lng": -15.2082,
+          "notes": "Town campsite in Höfn. Great showers, kitchen. Walking distance to lobster restaurants.",
+          "price_isk": 1800
+        },
+        "stops": [
+          {
+            "name": "Jökulsárlón Glacier Lagoon",
+            "type": "glacier",
+            "lat": 64.0784,
+            "lng": -16.2306,
+            "duration_min": 180,
+            "drive_from_prev_min": 60,
+            "notes": "Iconic glacier lagoon with blue icebergs. Boat tours available (~6,500 ISK). About 1.5-2 hours to explore. Very close to campsite, about 1 hour."
+          },
+          {
+            "name": "Diamond Beach",
+            "type": "sightseeing",
+            "lat": 64.0742,
+            "lng": -16.2270,
+            "duration_min": 45,
+            "drive_from_prev_min": 5,
+            "notes": "Icebergs on black sand beach. Just across the bridge from Jökulsárlón. Magical at golden hour."
+          }
+        ]
+      },
+      {
+        "day": 5,
+        "date": "2026-07-21",
+        "label": "Fjaðrárgljúfur area",
+        "overnight": {
+          "name": "South Coast Campsite",
+          "type": "campsite",
+          "lat": 63.6800,
+          "lng": -18.4000,
+          "notes": "Small quiet campsite. Good location between east and west.",
+          "price_isk": 1500
+        },
+        "stops": [
+          {
+            "name": "Fjallsárlón Glacier Lagoon",
+            "type": "glacier",
+            "lat": 64.0167,
+            "lng": -16.4167,
+            "duration_min": 60,
+            "drive_from_prev_min": 20,
+            "notes": "Smaller, quieter glacier lagoon. Fewer tourists. Great views of Vatnajökull."
+          },
+          {
+            "name": "Fjaðrárgljúfur Canyon",
+            "type": "hiking",
+            "lat": 63.7741,
+            "lng": -18.1721,
+            "duration_min": 90,
+            "drive_from_prev_min": 120,
+            "notes": "Stunning canyon up to 100m deep. 2km rim walk. Made famous by Justin Bieber. About 1.5-2 hours from glacier. May need permit in summer."
+          }
+        ]
+      },
+      {
+        "day": 6,
+        "date": "2026-07-22",
+        "label": "Hiking details",
+        "overnight": {
+          "name": "Landmannalaugar or nearby",
+          "type": "campsite",
+          "lat": 63.9927,
+          "lng": -19.0589,
+          "notes": "Highland campsite if accessible (4WD required). Otherwise stay on Ring Road route.",
+          "price_isk": 2000
+        },
+        "stops": [
+          {
+            "name": "Hiking/Exploration Day",
+            "type": "hiking",
+            "lat": 63.9927,
+            "lng": -19.0589,
+            "duration_min": 240,
+            "drive_from_prev_min": 120,
+            "notes": "Dedicated hiking day. Options: Landmannalaugar (if 4WD), or alternative hikes along south coast. About 2 hours drive."
+          }
+        ]
+      },
+      {
+        "day": 7,
+        "date": "2026-07-23",
+        "label": "Ólafsvik / Stykkishólmur",
+        "overnight": {
+          "name": "Snæfellsnes Peninsula Campsite",
+          "type": "campsite",
+          "lat": 64.8947,
+          "lng": -23.7114,
+          "notes": "West Iceland peninsula campsite. Great coastal views.",
+          "price_isk": 1800
+        },
+        "stops": [
+          {
+            "name": "Drive to Snæfellsnes Peninsula",
+            "type": "sightseeing",
+            "lat": 64.8947,
+            "lng": -23.7114,
+            "duration_min": 60,
+            "drive_from_prev_min": 180,
+            "notes": "Long drive to west coast peninsula. About 3 hours. Known as 'Iceland in miniature'."
+          },
+          {
+            "name": "Kirkjufell Mountain",
+            "type": "sightseeing",
+            "lat": 64.9246,
+            "lng": -23.3116,
+            "duration_min": 60,
+            "drive_from_prev_min": 30,
+            "notes": "Iceland's most photographed mountain. Short walk to viewpoint."
+          }
+        ]
+      },
+      {
+        "day": 8,
+        "date": "2026-07-24",
+        "label": "Return to Reykjavik",
+        "overnight": {
+          "name": "Reykjavík Campsite",
+          "type": "campsite",
+          "lat": 64.1349,
+          "lng": -21.8758,
+          "notes": "Back to Reykjavík. Final night before departure.",
+          "price_isk": 2500
+        },
+        "stops": [
+          {
+            "name": "Snæfellsnes Exploration",
+            "type": "sightseeing",
+            "lat": 64.8000,
+            "lng": -23.5000,
+            "duration_min": 120,
+            "drive_from_prev_min": 30,
+            "notes": "Morning exploration of peninsula. Beaches, lava fields, fishing villages."
+          },
+          {
+            "name": "Return to Reykjavík",
+            "type": "sightseeing",
+            "lat": 64.1466,
+            "lng": -21.9426,
+            "duration_min": 90,
+            "drive_from_prev_min": 120,
+            "notes": "Drive back to capital. About 2 hours. Optional stops at coastal towns on the way."
+          }
+        ]
+      },
+      {
+        "day": 9,
+        "date": "2026-07-25",
+        "label": "Departure",
+        "overnight": null,
+        "stops": [
+          {
+            "name": "Blue Lagoon (optional)",
+            "type": "hot_spring",
+            "lat": 63.8800,
+            "lng": -22.4500,
+            "duration_min": 180,
+            "drive_from_prev_min": 50,
+            "notes": "Book 6+ weeks in advance. Comfort package ~60 USD. Perfect final day before flight. About 50 min from Reykjavík."
+          },
+          {
+            "name": "Keflavík Airport — Car Return",
+            "type": "airport",
+            "lat": 63.9850,
+            "lng": -22.6056,
+            "duration_min": 60,
+            "drive_from_prev_min": 20,
+            "notes": "Return car 2-3 hrs before departure. Fill tank before returning!"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "campsites": [
+    {
+      "id": 1,
+      "name": "Reykjavík Campsite (Laugardalur)",
+      "region": "Reykjavík",
+      "lat": 64.1349,
+      "lng": -21.8758,
+      "price_isk": 2500,
+      "facilities": ["Showers", "Kitchen", "Laundry", "WiFi", "Electricity"],
+      "notes": "Large, well-equipped city campsite. Book ahead in summer.",
+      "phone": "+354 568 6944",
+      "website": "https://reykjavikcampsite.is"
+    },
+    {
+      "id": 2,
+      "name": "Hveragerði Campsite",
+      "region": "South Iceland",
+      "lat": 64.0013,
+      "lng": -21.1826,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "Geothermal town campsite. Walking distance to hot spring hikes.",
+      "phone": "+354 483 4601"
+    },
+    {
+      "id": 3,
+      "name": "Geysir Campsite",
+      "region": "Golden Circle",
+      "lat": 64.3103,
+      "lng": -20.3022,
+      "price_isk": 2000,
+      "facilities": ["Showers", "WiFi"],
+      "notes": "Right next to the geysers. Basic but perfectly located. Book ahead.",
+      "phone": "+354 480 6800"
+    },
+    {
+      "id": 4,
+      "name": "Skaftafell Campsite",
+      "region": "Vatnajökull National Park",
+      "lat": 64.0169,
+      "lng": -16.9753,
+      "price_isk": 2000,
+      "facilities": ["Showers", "Restrooms"],
+      "notes": "Massive campsite in stunning glacier scenery. No kitchen - bring camp stove. Arrive by 2pm.",
+      "phone": "+354 470 8300"
+    },
+    {
+      "id": 5,
+      "name": "Vík Campsite",
+      "region": "South Coast",
+      "lat": 63.4188,
+      "lng": -19.0064,
+      "price_isk": 2000,
+      "facilities": ["Showers", "Kitchen", "WiFi", "Laundry"],
+      "notes": "Best-located campsite on south coast. Walk to restaurants and black sand beach.",
+      "phone": "+354 487 1345"
+    },
+    {
+      "id": 6,
+      "name": "Höfn Campsite",
+      "region": "East Iceland",
+      "lat": 64.2527,
+      "lng": -15.2082,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "Friendly town campsite. Walking distance to lobster restaurants.",
+      "phone": "+354 478 1606"
+    },
+    {
+      "id": 7,
+      "name": "Hamragarðar Campsite",
+      "region": "South Coast",
+      "lat": 63.6156,
+      "lng": -19.9908,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Restrooms"],
+      "notes": "Small, quiet campsite near Seljalandsfoss. Basic facilities. Incredible evening light.",
+      "phone": "+354 487 8498"
+    },
+    {
+      "id": 8,
+      "name": "Kleifar-Mörk Campsite",
+      "region": "South Coast",
+      "lat": 63.6800,
+      "lng": -18.4000,
+      "price_isk": 1500,
+      "facilities": ["Showers", "Restrooms"],
+      "notes": "Hidden gem between Vík and Jökulsárlón. Small, quiet, cheap. Waterfall behind camp.",
+      "phone": "+354 487 4700"
+    },
+    {
+      "id": 9,
+      "name": "Snæfellsnes Peninsula Campsite",
+      "region": "West Iceland",
+      "lat": 64.8947,
+      "lng": -23.7114,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "West Iceland peninsula campsite. Great coastal views.",
+      "phone": "+354 435 6783"
+    },
+    {
+      "id": 10,
+      "name": "Thórsmörk Campsite",
+      "region": "Highlands",
+      "lat": 63.6892,
+      "lng": -19.5336,
+      "price_isk": 2200,
+      "facilities": ["Showers", "Restrooms"],
+      "notes": "Mountain valley campsite. 4WD required. Stunning hiking area.",
+      "phone": "+354 893 2910"
+    },
+    {
+      "id": 11,
+      "name": "Landmannalaugar Campsite",
+      "region": "Highlands",
+      "lat": 63.9927,
+      "lng": -19.0589,
+      "price_isk": 2000,
+      "facilities": ["Showers", "Hot springs", "Restrooms"],
+      "notes": "Highland campsite with natural hot springs. 4WD required. Opens late June.",
+      "phone": "+354 893 8407"
+    },
+    {
+      "id": 12,
+      "name": "Akureyri Campsite",
+      "region": "North Iceland",
+      "lat": 65.6835,
+      "lng": -18.0878,
+      "price_isk": 2000,
+      "facilities": ["Showers", "Kitchen", "WiFi", "Laundry"],
+      "notes": "Large city campsite. Good base for exploring North Iceland.",
+      "phone": "+354 462 3379"
+    },
+    {
+      "id": 13,
+      "name": "Mývatn Campsite (Bjarg)",
+      "region": "North Iceland",
+      "lat": 65.6366,
+      "lng": -16.9158,
+      "price_isk": 2000,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "Near Lake Mývatn. Great for geothermal areas and hiking.",
+      "phone": "+354 464 4103"
+    },
+    {
+      "id": 14,
+      "name": "Egilsstaðir Campsite",
+      "region": "East Iceland",
+      "lat": 65.2637,
+      "lng": -14.3944,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "East Iceland hub. Good facilities and central location.",
+      "phone": "+354 471 2320"
+    },
+    {
+      "id": 15,
+      "name": "Kirkjubæjarklaustur Campsite",
+      "region": "South Iceland",
+      "lat": 63.7862,
+      "lng": -18.0572,
+      "price_isk": 1800,
+      "facilities": ["Showers", "Kitchen", "WiFi"],
+      "notes": "Good stop between Vík and Skaftafell. Town has grocery store.",
+      "phone": "+354 487 4612"
+    }
+  ]
+}
