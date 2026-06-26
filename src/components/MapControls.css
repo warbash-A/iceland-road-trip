@@ -1,14 +1,15 @@
 .map-controls {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   z-index: 1000;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
   background: white;
-  padding: 0.75rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0.625rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .view-toggle {
@@ -18,13 +19,22 @@
 
 .view-toggle button,
 .edit-toggle {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border: 1px solid #e5e7eb;
   background: white;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  /* Better tap target */
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.view-toggle button:active,
+.edit-toggle:active {
+  transform: scale(0.95);
 }
 
 .view-toggle button:hover,
@@ -44,17 +54,13 @@
   border-color: #10b981;
 }
 
-@media (max-width: 768px) {
+/* Desktop layout */
+@media (min-width: 768px) {
   .map-controls {
-    top: 10px;
-    right: 10px;
-    flex-direction: column;
-    padding: 0.5rem;
-  }
-
-  .view-toggle button,
-  .edit-toggle {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
+    top: 20px;
+    right: 20px;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0.75rem;
   }
 }

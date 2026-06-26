@@ -2,10 +2,16 @@
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
-  border-radius: 6px;
+  padding: 0.875rem;
+  margin-bottom: 0.625rem;
+  border-radius: 8px;
   transition: background-color 0.2s ease;
+  position: relative;
+  min-height: 56px;
+}
+
+.stop-item:active {
+  background-color: #f1f5f9;
 }
 
 .stop-item:hover {
@@ -15,74 +21,69 @@
 .stop-icon {
   font-size: 1.5rem;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .stop-info {
   flex: 1;
+  min-width: 0;
 }
 
 .stop-info strong {
   display: block;
   color: #1e293b;
-  margin-bottom: 0.25rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.375rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
 .stop-duration {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: #3b82f6;
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .stop-notes {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: #64748b;
   line-height: 1.5;
 }
 
-/* Type-specific styling */
-.stop-airport {
-  border-left: 3px solid #6b7280;
-}
-
-.stop-grocery {
-  border-left: 3px solid #f59e0b;
-}
-
-.stop-sightseeing,
-.stop-waterfall,
-.stop-glacier,
-.stop-lava,
-.stop-hiking {
+.stop-airport { border-left: 3px solid #6b7280; }
+.stop-grocery { border-left: 3px solid #f59e0b; }
+.stop-sightseeing, .stop-waterfall, .stop-glacier, .stop-lava, .stop-hiking {
   border-left: 3px solid #3b82f6;
 }
-
-.stop-geothermal,
-.stop-hot_spring {
-  border-left: 3px solid #8b5cf6;
-}
-
-.stop-campsite {
-  border-left: 3px solid #10b981;
-}
+.stop-geothermal, .stop-hot_spring { border-left: 3px solid #8b5cf6; }
+.stop-campsite { border-left: 3px solid #10b981; }
 
 .stop-item.editable {
-  padding-right: 3rem;
+  padding-right: 3.5rem;
 }
 
 .edit-stop-btn {
   position: absolute;
-  right: 0.75rem;
+  right: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
   background: #3b82f6;
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  padding: 0.625rem 0.75rem;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 1rem;
   transition: all 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-stop-btn:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 .edit-stop-btn:hover {
