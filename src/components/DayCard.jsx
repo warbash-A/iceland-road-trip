@@ -72,24 +72,24 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
 
       {day.overnight && (
         <div className="overnight-section">
-          <div
-            className="overnight navigable"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onNavigate) {
-                onNavigate(day.overnight);
-              }
-            }}
-          >
+          <div className="overnight">
             <div className="overnight-icon">🏕️</div>
             <div className="overnight-info">
               <strong>{day.overnight.name}</strong>
               <p>{day.overnight.price_isk} ISK</p>
             </div>
-            <div className="navigate-indicator">
-              <span className="navigate-text">Navigate</span>
-              <span className="navigate-icon">🧭</span>
-            </div>
+            <button
+              className="navigate-campsite-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onNavigate) {
+                  onNavigate(day.overnight);
+                }
+              }}
+              title="Navigate to campsite"
+            >
+              🧭
+            </button>
           </div>
           <button
             className="alternatives-btn"
