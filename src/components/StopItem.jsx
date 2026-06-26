@@ -22,15 +22,23 @@ function StopItem({ stop, editMode, onEdit, onNavigate }) {
     return `${hours}h ${mins}m`;
   };
 
-  const handleNavigate = (e) => {
-    e.stopPropagation();
-    if (onNavigate) {
+  const handleStopClick = () => {
+    if (!editMode && onNavigate) {
       onNavigate(stop);
     }
   };
 
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    onEdit();
+  };
+
   return (
-    <div className={`stop-item stop-${stop.type} ${editMode ? 'editable' : ''}`}>
+    <div
+      className={`stop-item stop-${stop.type} ${editMode ? 'editable' : 'navigable'}`}
+      onClick={handleStopClick}
+      style={{ cursor: !editMode && onNavigate ? 'pointer' : 'default' }}
+    >
       <div className="stop-icon">{typeIcons[stop.type] || '📍'}</div>
       <div className="stop-info">
         <strong>{stop.name}</strong>
@@ -38,12 +46,13 @@ function StopItem({ stop, editMode, onEdit, onNavigate }) {
         {stop.notes && <p className="stop-notes">{stop.notes}</p>}
       </div>
       {!editMode && onNavigate && (
-        <button className="navigate-stop-btn" onClick={handleNavigate} title="Open in Maps">
-          🧭
-        </button>
+        <div className="navigate-indicator">
+          <span className="navigate-text">Tap to Navigate</span>
+          <span className="navigate-icon">🧭</span>
+        </div>
       )}
       {editMode && (
-        <button className="edit-stop-btn" onClick={onEdit}>
+        <button className="edit-stop-btn" onClick={handleEditClick}>
           ✏️
         </button>
       )}
