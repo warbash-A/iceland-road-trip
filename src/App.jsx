@@ -2,17 +2,20 @@ import { useState } from 'react';
 import DayList from './components/DayList';
 import TripMap from './components/TripMap';
 import EditStopModal from './components/EditStopModal';
+import EditDayModal from './components/EditDayModal';
 import CampsitePanel from './components/CampsitePanel';
 import tripDataOriginal from './data/trip.json';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
 
 function App() {
+  console.log('Iceland Road Trip App Loading...', { tripDataOriginal });
   const [tripData, setTripData] = useState(tripDataOriginal);
   const [selectedDay, setSelectedDay] = useState(1);
   const [viewMode, setViewMode] = useState('single'); // 'single' or 'all'
   const [editMode, setEditMode] = useState(false);
   const [editingStop, setEditingStop] = useState(null);
+  const [editingDay, setEditingDay] = useState(null);
   const [selectedCampsite, setSelectedCampsite] = useState(null);
 
   const handleSaveStop = (dayIndex, stopIndex, stopData) => {
@@ -69,6 +72,18 @@ function App() {
     }
   };
 
+  const handleEditDay = (dayIndex) => {
+    setEditingDay(dayIndex);
+  };
+
+  const handleSaveDay = (dayIndex, dayData) => {
+    const newTripData = { ...tripData };
+    newTripData.trip.days[dayIndex].date = dayData.date;
+    newTripData.trip.days[dayIndex].label = dayData.label;
+    setTripData(newTripData);
+    downloadTripData(newTripData);
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -83,6 +98,7 @@ function App() {
           editMode={editMode}
           onEditStop={handleEditStop}
           onAddStop={handleAddStop}
+          onEditDay={handleEditDay}
           onCampsiteClick={handleCampsiteClick}
         />
         <TripMap
@@ -103,6 +119,15 @@ function App() {
           onSave={handleSaveStop}
           onDelete={handleDeleteStop}
           onClose={() => setEditingStop(null)}
+        />
+      )}
+
+      {editingDay !== null && (
+        <EditDayModal
+          day={tripData.trip.days[editingDay]}
+          dayIndex={editingDay}
+          onSave={handleSaveDay}
+          onClose={() => setEditingDay(null)}
         />
       )}
 

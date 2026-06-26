@@ -1,7 +1,7 @@
 import StopItem from './StopItem';
 import './DayCard.css';
 
-function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onCampsiteClick }) {
+function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick }) {
   const totalDriveTime = day.stops
     .filter(s => s.drive_from_prev_min)
     .reduce((sum, s) => sum + s.drive_from_prev_min, 0);
@@ -23,9 +23,22 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
       onClick={onSelect}
     >
       <div className="day-header">
-        <h2>Day {day.day}</h2>
-        <p className="day-label">{day.label}</p>
-        <p className="day-date">{day.date}</p>
+        <div>
+          <h2>Day {day.day}</h2>
+          <p className="day-label">{day.label}</p>
+          <p className="day-date">{day.date}</p>
+        </div>
+        {editMode && (
+          <button
+            className="edit-day-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEditDay(day.day - 1);
+            }}
+          >
+            📅 Edit Date
+          </button>
+        )}
       </div>
 
       <div className="day-stats">

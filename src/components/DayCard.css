@@ -151,3 +151,26 @@
 .overnight.clickable:hover .campsite-action {
   opacity: 1;
 }
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.edit-day-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.edit-day-btn:hover {
+  background: #2563eb;
+}

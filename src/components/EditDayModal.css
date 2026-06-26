@@ -1,0 +1,9 @@
+.edit-day-modal {
+  max-width: 500px;
+}
+
+.help-text {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
