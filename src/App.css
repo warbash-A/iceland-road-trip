@@ -63,3 +63,134 @@ body {
     flex-direction: row; /* Side by side on desktop */
   }
 }
+
+/* Edit Mode Layout */
+.app-content.edit-mode .day-list {
+  width: 100%;
+  height: 100%;
+  border-right: none;
+}
+
+.edit-mode-panel {
+  width: 100%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow-y: auto;
+}
+
+.edit-mode-header h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.edit-mode-header p {
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.edit-mode-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.done-editing-btn {
+  background: white;
+  color: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.done-editing-btn:active {
+  transform: scale(0.98);
+}
+
+.done-editing-btn:hover {
+  background: #f1f5f9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.edit-mode-tips {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.edit-mode-tips h3 {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.edit-mode-tips ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.edit-mode-tips li {
+  font-size: 0.9375rem;
+  opacity: 0.95;
+  padding-left: 0;
+}
+
+@media (min-width: 768px) {
+  .app-content.edit-mode {
+    flex-direction: row;
+  }
+
+  .app-content.edit-mode .day-list {
+    width: 60%;
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .edit-mode-panel {
+    width: 40%;
+  }
+}
+
+/* Mobile edit mode */
+@media (max-width: 767px) {
+  .app-content.edit-mode {
+    flex-direction: column;
+  }
+
+  .app-content.edit-mode .day-list {
+    height: 70vh;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .edit-mode-panel {
+    height: 30vh;
+    padding: 1.5rem;
+  }
+
+  .edit-mode-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .edit-mode-tips {
+    padding: 1rem;
+  }
+
+  .edit-mode-tips ul {
+    gap: 0.5rem;
+  }
+
+  .edit-mode-tips li {
+    font-size: 0.875rem;
+  }
+}

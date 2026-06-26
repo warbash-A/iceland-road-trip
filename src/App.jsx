@@ -120,7 +120,7 @@ function App() {
         </div>
         <p>{tripData.trip.days.length} Days · {tripData.trip.start_date}</p>
       </header>
-      <div className="app-content">
+      <div className={`app-content ${editMode ? 'edit-mode' : ''}`}>
         <DayList
           days={tripData.trip.days}
           selectedDay={selectedDay}
@@ -132,14 +132,39 @@ function App() {
           onCampsiteClick={handleCampsiteClick}
           onNavigate={handleNavigate}
         />
-        <TripMap
-          days={tripData.trip.days}
-          selectedDay={selectedDay}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          editMode={editMode}
-          onEditModeToggle={() => setEditMode(!editMode)}
-        />
+        {!editMode && (
+          <TripMap
+            days={tripData.trip.days}
+            selectedDay={selectedDay}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            editMode={editMode}
+            onEditModeToggle={() => setEditMode(!editMode)}
+          />
+        )}
+        {editMode && (
+          <div className="edit-mode-panel">
+            <div className="edit-mode-header">
+              <h2>✏️ Edit Mode</h2>
+              <p>Make changes to your itinerary</p>
+            </div>
+            <div className="edit-mode-actions">
+              <button className="done-editing-btn" onClick={() => setEditMode(false)}>
+                ✓ Done Editing
+              </button>
+            </div>
+            <div className="edit-mode-tips">
+              <h3>What you can do:</h3>
+              <ul>
+                <li>📅 Edit day dates and labels</li>
+                <li>✏️ Edit stop details</li>
+                <li>➕ Add new stops</li>
+                <li>🗑️ Delete stops</li>
+                <li>🏕️ Change campsites</li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
 
       {editingStop && (
@@ -170,17 +195,21 @@ function App() {
         />
       )}
 
-      <NextStop
-        day={tripData.trip.days.find(d => d.day === selectedDay)}
-        onNavigate={handleNavigate}
-      />
+      {!editMode && (
+        <>
+          <NextStop
+            day={tripData.trip.days.find(d => d.day === selectedDay)}
+            onNavigate={handleNavigate}
+          />
 
-      <QuickNav
-        currentDay={selectedDay}
-        totalDays={tripData.trip.days.length}
-        onDayChange={setSelectedDay}
-        tripStartDate={tripData.trip.start_date}
-      />
+          <QuickNav
+            currentDay={selectedDay}
+            totalDays={tripData.trip.days.length}
+            onDayChange={setSelectedDay}
+            tripStartDate={tripData.trip.start_date}
+          />
+        </>
+      )}
     </div>
   );
 }
