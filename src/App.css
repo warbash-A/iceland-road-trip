@@ -43,7 +43,7 @@ body {
   display: flex;
   flex: 1;
   overflow: hidden;
-  flex-direction: column;
+  flex-direction: column-reverse; /* Map first, then days on mobile */
 }
 
 @media (min-width: 768px) {
@@ -60,6 +60,6 @@ body {
   }
 
   .app-content {
-    flex-direction: row;
+    flex-direction: row; /* Side by side on desktop */
   }
 }

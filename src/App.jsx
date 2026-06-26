@@ -9,7 +9,10 @@ import 'leaflet/dist/leaflet.css';
 import './App.css';
 
 function App() {
-  console.log('Iceland Road Trip App Loading...', { tripDataOriginal });
+  console.log('🇮🇸 Iceland Road Trip App v2.0 - Mobile Optimized', {
+    days: tripDataOriginal?.trip?.days?.length,
+    startDate: tripDataOriginal?.trip?.start_date
+  });
   const [tripData, setTripData] = useState(tripDataOriginal);
   const [selectedDay, setSelectedDay] = useState(1);
   const [viewMode, setViewMode] = useState('single'); // 'single' or 'all'
@@ -87,7 +90,17 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>{tripData.trip.title}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h1>{tripData.trip.title}</h1>
+          <span style={{
+            background: '#10b981',
+            color: 'white',
+            padding: '0.25rem 0.5rem',
+            borderRadius: '4px',
+            fontSize: '0.625rem',
+            fontWeight: '700'
+          }}>MOBILE v2.0</span>
+        </div>
         <p>{tripData.trip.days.length} Days · {tripData.trip.start_date}</p>
       </header>
       <div className="app-content">

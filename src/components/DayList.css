@@ -4,7 +4,7 @@
   overflow-y: auto;
   background-color: #f9fafb;
   padding: 1rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-top: 2px solid #e5e7eb; /* Border on top since map is above */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -13,7 +13,7 @@
     width: 40%;
     height: 100%;
     padding: 1.5rem;
-    border-bottom: none;
-    border-right: 1px solid #e5e7eb;
+    border-top: none;
+    border-right: 1px solid #e5e7eb; /* Border on right for desktop */
   }
 }
