@@ -1,7 +1,7 @@
 import DayCard from './DayCard';
 import './DayList.css';
 
-function DayList({ days, selectedDay, onSelectDay, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick }) {
+function DayList({ days, selectedDay, onSelectDay, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick, onNavigate }) {
   return (
     <div className="day-list">
       {days.map((day) => (
@@ -15,6 +15,7 @@ function DayList({ days, selectedDay, onSelectDay, editMode, onEditStop, onAddSt
           onAddStop={onAddStop}
           onEditDay={onEditDay}
           onCampsiteClick={onCampsiteClick}
+          onNavigate={onNavigate}
         />
       ))}
     </div>

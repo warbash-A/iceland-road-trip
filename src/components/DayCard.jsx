@@ -1,7 +1,7 @@
 import StopItem from './StopItem';
 import './DayCard.css';
 
-function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick }) {
+function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick, onNavigate }) {
   const totalDriveTime = day.stops
     .filter(s => s.drive_from_prev_min)
     .reduce((sum, s) => sum + s.drive_from_prev_min, 0);
@@ -54,6 +54,7 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
               stop={stop}
               editMode={editMode}
               onEdit={() => onEditStop(day.day - 1, index)}
+              onNavigate={onNavigate}
             />
             {stop.drive_from_prev_min && index < day.stops.length - 1 && (
               <div className="drive-time">

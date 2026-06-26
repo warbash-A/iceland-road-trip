@@ -4,6 +4,8 @@ import TripMap from './components/TripMap';
 import EditStopModal from './components/EditStopModal';
 import EditDayModal from './components/EditDayModal';
 import CampsitePanel from './components/CampsitePanel';
+import QuickNav from './components/QuickNav';
+import NextStop from './components/NextStop';
 import tripDataOriginal from './data/trip.json';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
@@ -87,6 +89,21 @@ function App() {
     downloadTripData(newTripData);
   };
 
+  const handleNavigate = (stop) => {
+    // Open in Google Maps or Apple Maps depending on device
+    const lat = stop.lat;
+    const lng = stop.lng;
+    const name = encodeURIComponent(stop.name);
+
+    // Detect iOS vs Android
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? `maps://maps.google.com/maps?daddr=${lat},${lng}&amp;ll=`
+      : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${name}`;
+
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -113,6 +130,7 @@ function App() {
           onAddStop={handleAddStop}
           onEditDay={handleEditDay}
           onCampsiteClick={handleCampsiteClick}
+          onNavigate={handleNavigate}
         />
         <TripMap
           days={tripData.trip.days}
@@ -151,6 +169,18 @@ function App() {
           onSelect={handleSelectNewCampsite}
         />
       )}
+
+      <NextStop
+        day={tripData.trip.days.find(d => d.day === selectedDay)}
+        onNavigate={handleNavigate}
+      />
+
+      <QuickNav
+        currentDay={selectedDay}
+        totalDays={tripData.trip.days.length}
+        onDayChange={setSelectedDay}
+        tripStartDate={tripData.trip.start_date}
+      />
     </div>
   );
 }
