@@ -165,3 +165,57 @@ export async function getTileCount() {
   const db = await openTileDB();
   return db.count(STORE_NAME);
 }
+
+// ============================================================================
+// Route Caching Functions (localStorage)
+// ============================================================================
+
+/**
+ * Cache OSRM route response to localStorage
+ */
+export function cacheRoute(dayNum, startIdx, endIdx, osrmResponse) {
+  const key = `osrm_route_day${dayNum}_stop${startIdx}_to_stop${endIdx}`;
+  const value = {
+    ...osrmResponse,
+    cachedAt: Date.now()
+  };
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+/**
+ * Get cached route from localStorage
+ */
+export function getCachedRoute(dayNum, startIdx, endIdx) {
+  const key = `osrm_route_day${dayNum}_stop${startIdx}_to_stop${endIdx}`;
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
+}
+
+/**
+ * Get all cached routes from localStorage
+ */
+export function getAllCachedRoutes() {
+  const routes = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('osrm_route_')) {
+      const value = localStorage.getItem(key);
+      routes.push({ key, value: JSON.parse(value) });
+    }
+  }
+  return routes;
+}
+
+/**
+ * Clear all cached routes from localStorage
+ */
+export function clearAllRoutes() {
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('osrm_route_')) {
+      keysToRemove.push(key);
+    }
+  }
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+}

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import {
   calculateBoundingBox,
   latLngToTile,
@@ -10,7 +10,11 @@ import {
   saveTile,
   getTile,
   clearAllTiles,
-  getTileCount
+  getTileCount,
+  cacheRoute,
+  getCachedRoute,
+  getAllCachedRoutes,
+  clearAllRoutes
 } from './offlineUtils';
 
 describe('calculateBoundingBox', () => {
@@ -129,5 +133,70 @@ describe('getTileCount', () => {
 
     const count = await getTileCount();
     expect(count).toBe(1);
+  });
+});
+
+describe('cacheRoute and getCachedRoute', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('should cache and retrieve route', () => {
+    const osrmResponse = {
+      routes: [{
+        geometry: { coordinates: [[1, 2], [3, 4]] },
+        distance: 1000,
+        duration: 60
+      }],
+      code: 'Ok'
+    };
+
+    cacheRoute(1, 0, 1, osrmResponse);
+
+    const cached = getCachedRoute(1, 0, 1);
+    expect(cached).not.toBeNull();
+    expect(cached.routes[0].distance).toBe(1000);
+    expect(cached.cachedAt).toBeGreaterThan(0);
+  });
+
+  it('should return null for non-existent route', () => {
+    const cached = getCachedRoute(99, 99, 99);
+    expect(cached).toBeNull();
+  });
+});
+
+describe('getAllCachedRoutes', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('should return all cached routes', () => {
+    const osrm1 = { routes: [{ distance: 1000 }], code: 'Ok' };
+    const osrm2 = { routes: [{ distance: 2000 }], code: 'Ok' };
+
+    cacheRoute(1, 0, 1, osrm1);
+    cacheRoute(1, 1, 2, osrm2);
+
+    const routes = getAllCachedRoutes();
+    expect(routes.length).toBe(2);
+  });
+});
+
+describe('clearAllRoutes', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('should clear all cached routes', () => {
+    cacheRoute(1, 0, 1, { routes: [], code: 'Ok' });
+    cacheRoute(1, 1, 2, { routes: [], code: 'Ok' });
+
+    let routes = getAllCachedRoutes();
+    expect(routes.length).toBe(2);
+
+    clearAllRoutes();
+
+    routes = getAllCachedRoutes();
+    expect(routes.length).toBe(0);
   });
 });
