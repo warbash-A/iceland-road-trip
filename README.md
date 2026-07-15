@@ -2,20 +2,41 @@
 
 A React-based companion app for a 9-day Iceland road trip itinerary, featuring an interactive map with route visualization.
 
-## Features
+## ✨ Features
 
-- **Day-by-Day Itinerary**: View all 9 days with stops, drive times, and overnight campsites
-- **Interactive Map**: Leaflet map showing routes, markers by stop type, and OSRM road routing
-- **Detailed Information**: Notes, durations, and prices for each location
-- **Mobile Responsive**: Works on desktop and mobile devices
-- **Driving Stats**: Total drive time and activity time per day
+- 🗺️ Interactive map with all stops and overnight locations
+- 📱 Mobile-optimized design
+- 🧭 One-click navigation to any stop
+- 📅 Day-by-day itinerary view
+- ✏️ Edit stops and campsites
+- 📍 Real-time location tracking
+- **🔌 NEW: Offline map support** - View maps without internet
 
-## Tech Stack
+## 🔌 Offline Maps
 
-- **React** + **Vite** - Fast, modern development
-- **Leaflet.js** + **react-leaflet** - Interactive maps (OpenStreetMap)
-- **OSRM API** - Real road-following route visualization
-- **Pure CSS** - Clean, responsive styling
+Download maps before your trip to use the app without internet:
+
+1. Connect to WiFi
+2. Click "Download offline maps" in the map controls
+3. Wait 3-5 minutes for ~65MB download
+4. Navigate Iceland with no internet required!
+
+See [Offline Maps User Guide](docs/offline-maps-user-guide.md) for details.
+
+## 🏗️ Tech Stack
+
+- React 19
+- Leaflet & React-Leaflet
+- IndexedDB (offline storage)
+- Service Workers (offline caching)
+- Vite
+
+## 📦 Storage Requirements
+
+- **Online:** ~5MB (app + data)
+- **Offline:** ~70MB (app + cached maps)
+
+Offline maps can be cleared anytime to free storage.
 
 ## Local Development
 
