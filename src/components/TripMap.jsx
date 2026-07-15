@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
+import { useEffect, useState, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import MapControls from './MapControls';
+import { getCachedRoute, cacheRoute } from '../utils/offlineUtils';
 import 'leaflet/dist/leaflet.css';
 import './TripMap.css';
 
@@ -13,13 +14,33 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// Custom colored markers with day labels
-const createColoredIcon = (color, dayNum) => {
+// Type icons mapping
+const typeIcons = {
+  airport: '✈️',
+  grocery: '🛒',
+  sightseeing: '👁️',
+  waterfall: '💧',
+  hiking: '🥾',
+  geothermal: '♨️',
+  glacier: '🧊',
+  lava: '🌋',
+  hot_spring: '♨️',
+  campsite: '🏕️'
+};
+
+// Custom colored markers with day number and activity icon
+const createColoredIconWithEmoji = (color, dayNum, stopType) => {
+  const icon = typeIcons[stopType] || '📍';
   return L.divIcon({
-    className: 'custom-marker',
-    html: `<div style="background-color: ${color}; width: ${dayNum ? '24px' : '16px'}; height: ${dayNum ? '24px' : '16px'}; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: white;">${dayNum || ''}</div>`,
-    iconSize: [dayNum ? 24 : 16, dayNum ? 24 : 16],
-    iconAnchor: [dayNum ? 12 : 8, dayNum ? 12 : 8],
+    className: 'custom-marker-with-icon',
+    html: `
+      <div style="display: flex; align-items: center; gap: 2px; background: white; border-radius: 20px; padding: 2px 6px 2px 2px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid white;">
+        <div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; color: white;">${dayNum}</div>
+        <span style="font-size: 16px; line-height: 1;">${icon}</span>
+      </div>
+    `,
+    iconSize: [48, 24],
+    iconAnchor: [24, 12],
   });
 };
 
@@ -38,11 +59,22 @@ const typeColors = {
 
 const dayColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#84cc16'];
 
-function MapController({ selectedDay, days, viewMode }) {
+function MapController({ days, selectedDay }) {
   const map = useMap();
 
   useEffect(() => {
-    if (viewMode === 'all') {
+    if (selectedDay) {
+      // Zoom to selected day
+      const day = days.find(d => d.day === selectedDay);
+      if (day && day.stops.length > 0) {
+        const points = [...day.stops];
+        if (day.overnight) {
+          points.push(day.overnight);
+        }
+        const bounds = L.latLngBounds(points.map(p => [p.lat, p.lng]));
+        map.fitBounds(bounds, { padding: [80, 80], maxZoom: 10 });
+      }
+    } else {
       // Show all days - fit to all stops
       const allStops = days.flatMap(d => d.stops);
       const allOvernights = days.filter(d => d.overnight).map(d => d.overnight);
@@ -52,32 +84,26 @@ function MapController({ selectedDay, days, viewMode }) {
         const bounds = L.latLngBounds(allPoints.map(p => [p.lat, p.lng]));
         map.fitBounds(bounds, { padding: [50, 50] });
       }
-    } else {
-      // Show single day
-      const day = days.find(d => d.day === selectedDay);
-      if (day && day.stops.length > 0) {
-        const bounds = L.latLngBounds(
-          day.stops.map(s => [s.lat, s.lng])
-        );
-        if (day.overnight) {
-          bounds.extend([day.overnight.lat, day.overnight.lng]);
-        }
-        map.fitBounds(bounds, { padding: [50, 50] });
-      }
     }
-  }, [selectedDay, days, map, viewMode]);
+  }, [selectedDay, days, map]);
 
   return null;
 }
 
-function TripMap({ days, selectedDay, viewMode, onViewModeChange, editMode, onEditModeToggle }) {
+function TripMap({ days, selectedDay, currentLocation, onNavigate, onDaySelect }) {
   const [routes, setRoutes] = useState({});
 
-  // Fetch routes for all days or just current day
-  useEffect(() => {
-    const daysToFetch = viewMode === 'all' ? days : days.filter(d => d.day === selectedDay);
+  // Create custom icon for current location
+  const currentLocationIcon = useMemo(() => L.divIcon({
+    className: 'current-location-marker',
+    html: '<div class="current-location-pulse"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  }), []);
 
-    daysToFetch.forEach(day => {
+  // Fetch routes for all days
+  useEffect(() => {
+    days.forEach(day => {
       if (routes[day.day]) return; // Already fetched
 
       const fetchRoute = async () => {
@@ -88,18 +114,34 @@ function TripMap({ days, selectedDay, viewMode, onViewModeChange, editMode, onEd
           const start = stops[i];
           const end = stops[i + 1];
 
-          try {
-            const response = await fetch(
-              `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`
-            );
-            const data = await response.json();
+          // Try to get cached route first
+          const cached = getCachedRoute(day.day, i, i + 1);
+          if (cached && cached.routes && cached.routes[0]) {
+            const coords = cached.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+            routeCoords.push(...coords);
+            continue;
+          }
 
-            if (data.routes && data.routes[0]) {
-              const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-              routeCoords.push(...coords);
+          // If not cached and online, fetch from OSRM
+          if (navigator.onLine) {
+            try {
+              const response = await fetch(
+                `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`
+              );
+              const data = await response.json();
+
+              if (data.routes && data.routes[0]) {
+                // Cache the response
+                cacheRoute(day.day, i, i + 1, data);
+
+                const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                routeCoords.push(...coords);
+              }
+            } catch (error) {
+              console.error('Error fetching route:', error);
             }
-          } catch (error) {
-            console.error('Error fetching route:', error);
+          } else {
+            console.warn('Offline and route not cached:', day.day, i, i + 1);
           }
         }
 
@@ -108,103 +150,116 @@ function TripMap({ days, selectedDay, viewMode, onViewModeChange, editMode, onEd
 
       fetchRoute();
     });
-  }, [days, selectedDay, viewMode, routes]);
+  }, [days, routes]);
 
   const renderMarkers = () => {
-    if (viewMode === 'all') {
-      // Show all days with day-numbered markers
-      return days.map((day) => (
-        <div key={day.day}>
-          {day.stops.map((stop, index) => (
-            <Marker
-              key={`${day.day}-${index}`}
-              position={[stop.lat, stop.lng]}
-              icon={createColoredIcon(dayColors[(day.day - 1) % dayColors.length], day.day)}
-            >
-              <Popup>
-                <strong>Day {day.day}: {stop.name}</strong>
-                <p>{stop.notes}</p>
-              </Popup>
-            </Marker>
-          ))}
-          {day.overnight && (
-            <Marker
-              position={[day.overnight.lat, day.overnight.lng]}
-              icon={createColoredIcon(typeColors.campsite)}
-            >
-              <Popup>
-                <strong>🏕️ Day {day.day}: {day.overnight.name}</strong>
-                <p>{day.overnight.price_isk} ISK</p>
-                <p>{day.overnight.notes}</p>
-              </Popup>
-            </Marker>
-          )}
-        </div>
-      ));
-    } else {
-      // Show single day with type-colored markers
-      const currentDay = days.find(d => d.day === selectedDay);
-      if (!currentDay) return null;
-
-      return (
-        <>
-          {currentDay.stops.map((stop, index) => (
-            <Marker
-              key={index}
-              position={[stop.lat, stop.lng]}
-              icon={createColoredIcon(typeColors[stop.type] || '#3b82f6')}
-            >
-              <Popup>
-                <strong>{stop.name}</strong>
-                <p>{stop.notes}</p>
-              </Popup>
-            </Marker>
-          ))}
-
-          {currentDay.overnight && (
-            <Marker
-              position={[currentDay.overnight.lat, currentDay.overnight.lng]}
-              icon={createColoredIcon(typeColors.campsite)}
-            >
-              <Popup>
-                <strong>🏕️ {currentDay.overnight.name}</strong>
-                <p>{currentDay.overnight.price_isk} ISK</p>
-                <p>{currentDay.overnight.notes}</p>
-              </Popup>
-            </Marker>
-          )}
-        </>
-      );
-    }
+    return days.map((day) => (
+      <div key={day.day}>
+        {day.stops.map((stop, index) => (
+          <Marker
+            key={`${day.day}-${index}`}
+            position={[stop.lat, stop.lng]}
+            icon={createColoredIconWithEmoji(dayColors[(day.day - 1) % dayColors.length], day.day, stop.type)}
+          >
+            <Popup>
+              <div style={{ minWidth: '180px' }}>
+                <strong
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.25rem',
+                    color: dayColors[(day.day - 1) % dayColors.length],
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  Day {day.day}
+                </strong>
+                <strong style={{ display: 'block', marginBottom: '0.5rem' }}>{stop.name}</strong>
+                <p style={{ margin: '0.5rem 0', fontSize: '0.875rem', color: '#64748b' }}>{stop.notes}</p>
+                <button
+                  onClick={() => onNavigate(stop)}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.875rem',
+                    marginTop: '0.5rem'
+                  }}
+                >
+                  🧭 Navigate
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+        {day.overnight && (
+          <Marker
+            position={[day.overnight.lat, day.overnight.lng]}
+            icon={createColoredIconWithEmoji(dayColors[(day.day - 1) % dayColors.length], day.day, 'campsite')}
+          >
+            <Popup>
+              <div style={{ minWidth: '180px' }}>
+                <strong
+                  style={{
+                    display: 'block',
+                    marginBottom: '0.25rem',
+                    color: dayColors[(day.day - 1) % dayColors.length],
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  Day {day.day}
+                </strong>
+                <strong style={{ display: 'block', marginBottom: '0.5rem' }}>🏕️ {day.overnight.name}</strong>
+                <p style={{ margin: '0.5rem 0', fontSize: '0.875rem', color: '#64748b' }}>{day.overnight.price_isk} ISK</p>
+                {day.overnight.notes && <p style={{ margin: '0.5rem 0', fontSize: '0.875rem', color: '#64748b' }}>{day.overnight.notes}</p>}
+                <button
+                  onClick={() => onNavigate(day.overnight)}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.875rem',
+                    marginTop: '0.5rem'
+                  }}
+                >
+                  🧭 Navigate
+                </button>
+              </div>
+            </Popup>
+          </Marker>
+        )}
+      </div>
+    ));
   };
 
   const renderRoutes = () => {
-    if (viewMode === 'all') {
-      // Show all routes in different colors
-      return days.map((day) => {
-        if (!routes[day.day] || routes[day.day].length === 0) return null;
-        return (
-          <Polyline
-            key={day.day}
-            positions={routes[day.day]}
-            color={dayColors[(day.day - 1) % dayColors.length]}
-            weight={3}
-            opacity={0.7}
-          />
-        );
-      });
-    } else {
-      // Show single day route
-      if (!routes[selectedDay] || routes[selectedDay].length === 0) return null;
+    return days.map((day) => {
+      if (!routes[day.day] || routes[day.day].length === 0) return null;
       return (
         <Polyline
-          positions={routes[selectedDay]}
-          color="#3b82f6"
+          key={day.day}
+          positions={routes[day.day]}
+          color={dayColors[(day.day - 1) % dayColors.length]}
           weight={3}
           opacity={0.7}
         />
       );
-    }
+    });
   };
 
   return (
@@ -219,18 +274,32 @@ function TripMap({ days, selectedDay, viewMode, onViewModeChange, editMode, onEd
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MapController selectedDay={selectedDay} days={days} viewMode={viewMode} />
+        <MapController days={days} selectedDay={selectedDay} />
 
         {renderMarkers()}
         {renderRoutes()}
+
+        {/* Current location marker */}
+        {currentLocation && (
+          <>
+            <Marker
+              position={[currentLocation.lat, currentLocation.lng]}
+              icon={currentLocationIcon}
+            >
+              <Popup>
+                <strong>📍 Your Location</strong>
+                <p>Accuracy: ±{Math.round(currentLocation.accuracy)}m</p>
+              </Popup>
+            </Marker>
+            <Circle
+              center={[currentLocation.lat, currentLocation.lng]}
+              radius={currentLocation.accuracy}
+              pathOptions={{ color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.1 }}
+            />
+          </>
+        )}
       </MapContainer>
 
-      <MapControls
-        viewMode={viewMode}
-        onViewModeChange={onViewModeChange}
-        editMode={editMode}
-        onEditModeToggle={onEditModeToggle}
-      />
     </div>
   );
 }
