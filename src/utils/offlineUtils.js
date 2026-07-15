@@ -100,3 +100,68 @@ export function calculateAllTiles(stops, bufferKm, zoomLevels) {
 
   return allTiles;
 }
+
+// ============================================================================
+// IndexedDB Operations
+// ============================================================================
+
+import { openDB } from 'idb';
+
+const DB_NAME = 'iceland-trip-tiles';
+const DB_VERSION = 1;
+const STORE_NAME = 'tiles';
+
+/**
+ * Open IndexedDB database for tile storage
+ */
+export async function openTileDB() {
+  return openDB(DB_NAME, DB_VERSION, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    }
+  });
+}
+
+/**
+ * Save tile to IndexedDB
+ */
+export async function saveTile(z, x, y, blob) {
+  const db = await openTileDB();
+  const key = `tile_${z}_${x}_${y}`;
+  const value = {
+    blob,
+    timestamp: Date.now(),
+    url: tileToUrl(z, x, y)
+  };
+  await db.put(STORE_NAME, value, key);
+}
+
+/**
+ * Get tile from IndexedDB
+ */
+export async function getTile(z, x, y) {
+  const db = await openTileDB();
+  const key = `tile_${z}_${x}_${y}`;
+  const value = await db.get(STORE_NAME, key);
+  return value || null;
+}
+
+/**
+ * Clear all tiles from IndexedDB
+ */
+export async function clearAllTiles() {
+  const db = await openTileDB();
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  await tx.objectStore(STORE_NAME).clear();
+  await tx.done;
+}
+
+/**
+ * Get count of tiles in IndexedDB
+ */
+export async function getTileCount() {
+  const db = await openTileDB();
+  return db.count(STORE_NAME);
+}

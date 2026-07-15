@@ -5,7 +5,12 @@ import {
   bboxToTileRange,
   generateTileList,
   tileToUrl,
-  calculateAllTiles
+  calculateAllTiles,
+  openTileDB,
+  saveTile,
+  getTile,
+  clearAllTiles,
+  getTileCount
 } from './offlineUtils';
 
 describe('calculateBoundingBox', () => {
@@ -72,5 +77,57 @@ describe('calculateAllTiles', () => {
     expect(tiles[0]).toHaveProperty('z');
     expect(tiles[0]).toHaveProperty('x');
     expect(tiles[0]).toHaveProperty('y');
+  });
+});
+
+describe('openTileDB', () => {
+  it('should open IndexedDB database', async () => {
+    const db = await openTileDB();
+    expect(db.name).toBe('iceland-trip-tiles');
+    expect(db.objectStoreNames.contains('tiles')).toBe(true);
+    db.close();
+  });
+});
+
+describe('saveTile and getTile', () => {
+  it('should save and retrieve tile', async () => {
+    const blob = new Uint8Array([137, 80, 78, 71]); // PNG header
+    await saveTile(10, 488, 335, blob);
+
+    const tile = await getTile(10, 488, 335);
+    expect(tile).not.toBeNull();
+    expect(Array.from(tile.blob)).toEqual(Array.from(blob));
+    expect(tile.timestamp).toBeGreaterThan(0);
+    expect(tile.url).toContain('10/488/335');
+  });
+
+  it('should return null for non-existent tile', async () => {
+    const tile = await getTile(99, 999, 999);
+    expect(tile).toBeNull();
+  });
+});
+
+describe('clearAllTiles', () => {
+  it('should clear all tiles from database', async () => {
+    await saveTile(10, 488, 335, new Uint8Array([1, 2, 3]));
+    await saveTile(10, 489, 335, new Uint8Array([4, 5, 6]));
+
+    let count = await getTileCount();
+    expect(count).toBeGreaterThan(0);
+
+    await clearAllTiles();
+
+    count = await getTileCount();
+    expect(count).toBe(0);
+  });
+});
+
+describe('getTileCount', () => {
+  it('should return tile count', async () => {
+    await clearAllTiles();
+    await saveTile(10, 488, 335, new Uint8Array([1]));
+
+    const count = await getTileCount();
+    expect(count).toBe(1);
   });
 });
