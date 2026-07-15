@@ -14,7 +14,13 @@ import {
   cacheRoute,
   getCachedRoute,
   getAllCachedRoutes,
-  clearAllRoutes
+  clearAllRoutes,
+  getStorageInfo,
+  estimateDownloadSize,
+  checkStorageAvailable,
+  getOfflineMetadata,
+  setOfflineMetadata,
+  isOfflineDataAvailable
 } from './offlineUtils';
 
 describe('calculateBoundingBox', () => {
@@ -198,5 +204,83 @@ describe('clearAllRoutes', () => {
 
     routes = getAllCachedRoutes();
     expect(routes.length).toBe(0);
+  });
+});
+
+describe('getStorageInfo', () => {
+  it('should return storage info', async () => {
+    const info = await getStorageInfo();
+    if (info) {
+      expect(info).toHaveProperty('usage');
+      expect(info).toHaveProperty('quota');
+      expect(info).toHaveProperty('available');
+      expect(info.available).toBeGreaterThanOrEqual(0);
+    } else {
+      // Browser doesn't support storage API
+      expect(info).toBeNull();
+    }
+  });
+});
+
+describe('estimateDownloadSize', () => {
+  it('should estimate download size', () => {
+    const size = estimateDownloadSize(1000);
+    expect(size).toBe(45000000); // 1000 * 45KB = 45MB
+  });
+});
+
+describe('checkStorageAvailable', () => {
+  it('should check if storage is available', async () => {
+    const available = await checkStorageAvailable(1000000); // 1MB
+    expect(typeof available).toBe('boolean');
+  });
+});
+
+describe('getOfflineMetadata and setOfflineMetadata', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('should set and get offline metadata', () => {
+    const metadata = {
+      version: '1.0',
+      downloadedAt: Date.now(),
+      totalTiles: 1500,
+      storageUsedBytes: 67000000,
+      boundingBox: { north: 66.5, south: 63.4, east: -13.5, west: -24.5 },
+      zoomLevels: [7, 8, 9, 10, 11, 12, 13, 14, 15],
+      routesDownloaded: 45
+    };
+
+    setOfflineMetadata(metadata);
+
+    const retrieved = getOfflineMetadata();
+    expect(retrieved).toEqual(metadata);
+  });
+
+  it('should return null if no metadata exists', () => {
+    const metadata = getOfflineMetadata();
+    expect(metadata).toBeNull();
+  });
+});
+
+describe('isOfflineDataAvailable', () => {
+  beforeEach(async () => {
+    localStorage.clear();
+    await clearAllTiles();
+  });
+
+  it('should return false when no data', async () => {
+    const available = await isOfflineDataAvailable();
+    expect(available).toBe(false);
+  });
+
+  it('should return true when data exists', async () => {
+    await saveTile(10, 488, 335, new Uint8Array([1]));
+    cacheRoute(1, 0, 1, { routes: [], code: 'Ok' });
+    setOfflineMetadata({ version: '1.0', totalTiles: 1 });
+
+    const available = await isOfflineDataAvailable();
+    expect(available).toBe(true);
   });
 });

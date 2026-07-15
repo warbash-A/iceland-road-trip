@@ -219,3 +219,72 @@ export function clearAllRoutes() {
   }
   keysToRemove.forEach(key => localStorage.removeItem(key));
 }
+
+// ============================================================================
+// Storage Management Functions
+// ============================================================================
+
+/**
+ * Get storage usage information
+ */
+export async function getStorageInfo() {
+  if ('storage' in navigator && 'estimate' in navigator.storage) {
+    const { usage, quota } = await navigator.storage.estimate();
+    return {
+      usage,
+      quota,
+      available: quota - usage
+    };
+  }
+  return null;
+}
+
+/**
+ * Estimate download size based on tile count
+ * Average tile size: 45KB
+ */
+export function estimateDownloadSize(tileCount) {
+  const avgTileSize = 45 * 1000; // 45KB in bytes (decimal)
+  return tileCount * avgTileSize;
+}
+
+/**
+ * Check if required storage is available
+ */
+export async function checkStorageAvailable(requiredBytes) {
+  const info = await getStorageInfo();
+  if (!info) return true; // Can't check, assume available
+  return info.available >= requiredBytes;
+}
+
+// ============================================================================
+// Offline Metadata Functions
+// ============================================================================
+
+const METADATA_KEY = 'offline_metadata';
+
+/**
+ * Get offline metadata from localStorage
+ */
+export function getOfflineMetadata() {
+  const item = localStorage.getItem(METADATA_KEY);
+  return item ? JSON.parse(item) : null;
+}
+
+/**
+ * Set offline metadata in localStorage
+ */
+export function setOfflineMetadata(metadata) {
+  localStorage.setItem(METADATA_KEY, JSON.stringify(metadata));
+}
+
+/**
+ * Check if offline data is available
+ */
+export async function isOfflineDataAvailable() {
+  const tileCount = await getTileCount();
+  const routes = getAllCachedRoutes();
+  const metadata = getOfflineMetadata();
+
+  return tileCount > 0 && routes.length > 0 && metadata !== null;
+}
