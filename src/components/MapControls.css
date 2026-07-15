@@ -54,6 +54,12 @@
   border-color: #10b981;
 }
 
+.offline-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
 /* Desktop layout */
 @media (min-width: 768px) {
   .map-controls {

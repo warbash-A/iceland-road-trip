@@ -1,7 +1,14 @@
+import { useState, useEffect } from 'react';
 import StopItem from './StopItem';
 import './DayCard.css';
 
-function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick, onNavigate }) {
+function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, onEditDay, onCampsiteClick, onNavigate, visitedStops, onToggleVisited, selectedStop, onSelectStop }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Only selected day is expanded, all others collapse
+  useEffect(() => {
+    setIsExpanded(isSelected);
+  }, [isSelected]);
   const totalDriveTime = day.stops
     .filter(s => s.drive_from_prev_min)
     .reduce((sum, s) => sum + s.drive_from_prev_min, 0);
@@ -17,16 +24,29 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
     return `${hours}h ${mins}m`;
   };
 
+  const handleHeaderClick = () => {
+    onSelect(); // Let the parent handle selection, which will auto-expand via useEffect
+  };
+
+  const visitedCount = day.stops.filter(stop => visitedStops && visitedStops[`${day.day}-${stop.name}`]).length;
+
   return (
     <div
-      className={`day-card ${isSelected ? 'selected' : ''}`}
-      onClick={onSelect}
+      className={`day-card ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : 'collapsed'}`}
     >
-      <div className="day-header">
-        <div>
-          <h2>Day {day.day}</h2>
-          <p className="day-label">{day.label}</p>
-          <p className="day-date">{day.date}</p>
+      <div className="day-header" onClick={handleHeaderClick}>
+        <div className="day-header-left">
+          <button className="collapse-btn" onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}>
+            {isExpanded ? '▼' : '▶'}
+          </button>
+          <div>
+            <h2>Day {day.day}</h2>
+            <p className="day-label">{day.label}</p>
+            <p className="day-date">{day.date}</p>
+            {!isExpanded && visitedCount > 0 && (
+              <p className="visit-count">✓ {visitedCount}/{day.stops.length} completed</p>
+            )}
+          </div>
         </div>
         {editMode && (
           <button
@@ -41,20 +61,26 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
         )}
       </div>
 
-      <div className="day-stats">
-        <span>{day.stops.length} stops</span>
-        <span>🚗 {formatTime(totalDriveTime)}</span>
-        <span>⏱️ {formatTime(totalActivityTime)}</span>
-      </div>
+      {isExpanded && (
+        <>
+          <div className="day-stats">
+            <span>{day.stops.length} stops</span>
+            <span>🚗 {formatTime(totalDriveTime)}</span>
+            <span>⏱️ {formatTime(totalActivityTime)}</span>
+          </div>
 
-      <div className="stops-list">
+          <div className="stops-list">
         {day.stops.map((stop, index) => (
           <div key={index}>
             <StopItem
               stop={stop}
               editMode={editMode}
-              onEdit={() => onEditStop(day.day - 1, index)}
+              onEdit={!editMode ? () => onEditStop(day.day - 1, index) : undefined}
               onNavigate={onNavigate}
+              visited={visitedStops && visitedStops[`${day.day}-${stop.name}`]}
+              onToggleVisited={() => onToggleVisited && onToggleVisited(day.day, stop.name)}
+              isSelected={selectedStop && selectedStop.dayIndex === day.day - 1 && selectedStop.stopIndex === index}
+              onSelect={() => onSelectStop && onSelectStop(day.day - 1, index)}
             />
             {stop.drive_from_prev_min && index < day.stops.length - 1 && (
               <div className="drive-time">
@@ -63,11 +89,9 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
             )}
           </div>
         ))}
-        {editMode && (
-          <button className="add-stop-btn" onClick={() => onAddStop(day.day - 1)}>
-            + Add Stop
-          </button>
-        )}
+        <button className="add-stop-btn" onClick={() => onAddStop(day.day - 1)}>
+          + Add Stop
+        </button>
       </div>
 
       {day.overnight && (
@@ -101,6 +125,8 @@ function DayCard({ day, isSelected, onSelect, editMode, onEditStop, onAddStop, o
             View Alternatives →
           </button>
         </div>
+      )}
+        </>
       )}
     </div>
   );

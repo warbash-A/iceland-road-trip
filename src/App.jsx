@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DayList from './components/DayList';
 import TripMap from './components/TripMap';
 import EditStopModal from './components/EditStopModal';
 import EditDayModal from './components/EditDayModal';
 import CampsitePanel from './components/CampsitePanel';
 import QuickNav from './components/QuickNav';
-import NextStop from './components/NextStop';
+import { useGeolocation } from './hooks/useGeolocation';
 import tripDataOriginal from './data/trip.json';
 import 'leaflet/dist/leaflet.css';
 import './App.css';
@@ -17,11 +17,23 @@ function App() {
   });
   const [tripData, setTripData] = useState(tripDataOriginal);
   const [selectedDay, setSelectedDay] = useState(1);
-  const [viewMode, setViewMode] = useState('single'); // 'single' or 'all'
+  const [isFullDayView, setIsFullDayView] = useState(false); // Track if in full-screen day view
   const [editMode, setEditMode] = useState(false);
   const [editingStop, setEditingStop] = useState(null);
   const [editingDay, setEditingDay] = useState(null);
   const [selectedCampsite, setSelectedCampsite] = useState(null);
+  const [selectedStop, setSelectedStop] = useState(null); // { dayIndex, stopIndex }
+  const [visitedStops, setVisitedStops] = useState(() => {
+    const saved = localStorage.getItem('iceland-trip-visited');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const { location } = useGeolocation();
+
+  // Save visited stops to localStorage
+  useEffect(() => {
+    localStorage.setItem('iceland-trip-visited', JSON.stringify(visitedStops));
+  }, [visitedStops]);
 
   const handleSaveStop = (dayIndex, stopIndex, stopData) => {
     const newTripData = { ...tripData };
@@ -104,6 +116,24 @@ function App() {
     window.open(url, '_blank');
   };
 
+  const handleToggleVisited = (dayNum, stopName) => {
+    const key = `${dayNum}-${stopName}`;
+    setVisitedStops(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const handleSelectStop = (dayIndex, stopIndex) => {
+    setSelectedStop({ dayIndex, stopIndex });
+    // Also select the day containing this stop
+    setSelectedDay(dayIndex + 1);
+  };
+
+  // Calculate total visited stops
+  const totalVisitedStops = Object.values(visitedStops).filter(Boolean).length;
+  const totalStops = tripData.trip.days.reduce((sum, day) => sum + day.stops.length, 0);
+
   return (
     <div className="app">
       <header className="app-header">
@@ -121,50 +151,40 @@ function App() {
         <p>{tripData.trip.days.length} Days · {tripData.trip.start_date}</p>
       </header>
       <div className={`app-content ${editMode ? 'edit-mode' : ''}`}>
+        {isFullDayView && (
+          <button
+            className="back-to-map-btn"
+            onClick={() => setIsFullDayView(false)}
+          >
+            ← Back to Map
+          </button>
+        )}
         <DayList
           days={tripData.trip.days}
           selectedDay={selectedDay}
-          onSelectDay={setSelectedDay}
+          onSelectDay={(day) => {
+            setSelectedDay(day);
+            setIsFullDayView(true); // Enter full-screen mode when clicking a day
+          }}
           editMode={editMode}
           onEditStop={handleEditStop}
           onAddStop={handleAddStop}
           onEditDay={handleEditDay}
           onCampsiteClick={handleCampsiteClick}
           onNavigate={handleNavigate}
+          visitedStops={visitedStops}
+          onToggleVisited={handleToggleVisited}
+          selectedStop={selectedStop}
+          onSelectStop={handleSelectStop}
+          isFullDayView={isFullDayView}
         />
-        {!editMode && (
-          <TripMap
-            days={tripData.trip.days}
-            selectedDay={selectedDay}
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-            editMode={editMode}
-            onEditModeToggle={() => setEditMode(!editMode)}
-          />
-        )}
-        {editMode && (
-          <div className="edit-mode-panel">
-            <div className="edit-mode-header">
-              <h2>✏️ Edit Mode</h2>
-              <p>Make changes to your itinerary</p>
-            </div>
-            <div className="edit-mode-actions">
-              <button className="done-editing-btn" onClick={() => setEditMode(false)}>
-                ✓ Done Editing
-              </button>
-            </div>
-            <div className="edit-mode-tips">
-              <h3>What you can do:</h3>
-              <ul>
-                <li>📅 Edit day dates and labels</li>
-                <li>✏️ Edit stop details</li>
-                <li>➕ Add new stops</li>
-                <li>🗑️ Delete stops</li>
-                <li>🏕️ Change campsites</li>
-              </ul>
-            </div>
-          </div>
-        )}
+        <TripMap
+          days={tripData.trip.days}
+          selectedDay={selectedDay}
+          currentLocation={location}
+          onNavigate={handleNavigate}
+          onDaySelect={setSelectedDay}
+        />
       </div>
 
       {editingStop && (
@@ -196,19 +216,15 @@ function App() {
       )}
 
       {!editMode && (
-        <>
-          <NextStop
-            day={tripData.trip.days.find(d => d.day === selectedDay)}
-            onNavigate={handleNavigate}
-          />
-
-          <QuickNav
-            currentDay={selectedDay}
-            totalDays={tripData.trip.days.length}
-            onDayChange={setSelectedDay}
-            tripStartDate={tripData.trip.start_date}
-          />
-        </>
+        <QuickNav
+          currentDay={selectedDay}
+          totalDays={tripData.trip.days.length}
+          onDayChange={(day) => {
+            setSelectedDay(day);
+            setIsFullDayView(true); // Enter full-screen mode when using quick nav
+          }}
+          tripStartDate={tripData.trip.start_date}
+        />
       )}
     </div>
   );

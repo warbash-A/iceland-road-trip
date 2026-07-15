@@ -7,6 +7,14 @@
   padding-bottom: 5.5rem; /* Space for bottom nav on mobile */
   border-top: 2px solid #e5e7eb;
   -webkit-overflow-scrolling: touch;
+  transition: height 0.3s ease;
+}
+
+/* When a day is selected, expand to full screen */
+.day-list.expanded {
+  height: calc(100vh - 80px); /* Full height minus header */
+  position: relative;
+  z-index: 10;
 }
 
 @media (min-width: 768px) {

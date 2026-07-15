@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-07-15T15:28:27.495Z",
+  "projectRoot": "/Users/wafaaarbash/iceland-road-trip",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": false,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1784129307495
+}

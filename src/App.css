@@ -44,6 +44,96 @@ body {
   flex: 1;
   overflow: hidden;
   flex-direction: column-reverse; /* Map first, then days on mobile */
+  position: relative;
+}
+
+/* Back to Map button */
+.back-to-map-btn {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  z-index: 20;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.625rem 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  transition: all 0.2s ease;
+  display: none;
+}
+
+.back-to-map-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.back-to-map-btn:active {
+  transform: scale(0.95);
+}
+
+/* Hide map when day list is expanded on mobile */
+@media (max-width: 767px) {
+  .app-content:has(.day-list.expanded) .trip-map {
+    display: none;
+  }
+
+  .app-content:has(.day-list.expanded) .back-to-map-btn {
+    display: block;
+  }
+}
+
+/* Progress bar styles */
+.progress-bar-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.progress-bar-container h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+.progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 3px;
+  transition: width 0.3s ease;
 }
 
 @media (min-width: 768px) {

@@ -247,6 +247,7 @@ function TripMap({ days, selectedDay, viewMode, onViewModeChange, editMode, onEd
         onViewModeChange={onViewModeChange}
         editMode={editMode}
         onEditModeToggle={onEditModeToggle}
+        days={days}
       />
     </div>
   );

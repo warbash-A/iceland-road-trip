@@ -62,29 +62,6 @@ function EditStopModal({ stop, dayIndex, stopIndex, onSave, onDelete, onClose })
 
           <div className="form-row">
             <div className="form-group">
-              <label>Latitude</label>
-              <input
-                type="number"
-                step="0.0001"
-                value={formData.lat}
-                onChange={(e) => handleChange('lat', parseFloat(e.target.value))}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Longitude</label>
-              <input
-                type="number"
-                step="0.0001"
-                value={formData.lng}
-                onChange={(e) => handleChange('lng', parseFloat(e.target.value))}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
               <label>Duration (minutes)</label>
               <input
                 type="number"
